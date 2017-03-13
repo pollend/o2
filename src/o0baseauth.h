@@ -9,7 +9,6 @@
 #include <QVariantMap>
 
 #include "o0export.h"
-#include "o0abstractstore.h"
 #include "o0requestparameter.h"
 
 /// Base class of OAuth authenticators
@@ -55,9 +54,6 @@ public:
     int localPort();
     void setLocalPort(int value);
 
-    /// Sets the storage object to use for storing the OAuth tokens on a peristent medium
-    void setStore(O0AbstractStore *store);
-
     /// Construct query string from list of headers
     static QByteArray createQueryParameters(const QList<O0RequestParameter> &parameters);
 
@@ -92,9 +88,6 @@ Q_SIGNALS:
     void extraTokensChanged();
 
 protected:
-    /// Set authentication token.
-    void setToken(const QString &v);
-
     /// Set authentication token secret.
     void setTokenSecret(const QString &v);
 
@@ -110,11 +103,12 @@ protected:
     QString redirectUri_;
     QString requestToken_;
     QString requestTokenSecret_;
+
     QUrl requestTokenUrl_;
     QUrl authorizeUrl_;
     QUrl accessTokenUrl_;
+
     quint16 localPort_;
-    O0AbstractStore *store_;
     QVariantMap extraTokens_;
 };
 

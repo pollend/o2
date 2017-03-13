@@ -3,31 +3,16 @@
 
 #include "o0baseauth.h"
 #include "o0globals.h"
-#include "o0settingsstore.h"
 
 static const quint16 DefaultLocalPort = 1965;
 
 O0BaseAuth::O0BaseAuth(QObject *parent): QObject(parent) {
     localPort_ = DefaultLocalPort;
-    store_ = new O0SettingsStore(O2_ENCRYPTION_KEY, this);
 }
 
-void O0BaseAuth::setStore(O0AbstractStore *store) {
-    if (store_) {
-        store_->deleteLater();
-    }
-    if (store) {
-        store_ = store;
-        store_->setParent(this);
-    } else {
-        store_ = new O0SettingsStore(O2_ENCRYPTION_KEY, this);
-        return;
-    }
-}
 
 bool O0BaseAuth::linked() {
     QString key = QString(O2_KEY_LINKED).arg(clientId_);
-    bool result = !store_->value(key).isEmpty();
     qDebug() << "O0BaseAuth::linked:" << (result? "Yes": "No");
     return result;
 }
@@ -36,7 +21,6 @@ void O0BaseAuth::setLinked(bool v) {
     qDebug() << "O0BaseAuth::setLinked:" << (v? "true": "false");
     bool oldValue = linked();
     QString key = QString(O2_KEY_LINKED).arg(clientId_);
-    store_->setValue(key, v? "1": "");
     if (oldValue != v) {
         Q_EMIT linkedChanged();
     }
@@ -44,25 +28,13 @@ void O0BaseAuth::setLinked(bool v) {
 
 QString O0BaseAuth::tokenSecret() {
     QString key = QString(O2_KEY_TOKEN_SECRET).arg(clientId_);
-    return store_->value(key);
 }
 
 void O0BaseAuth::setTokenSecret(const QString &v) {
     QString key = QString(O2_KEY_TOKEN_SECRET).arg(clientId_);
-    store_->setValue(key, v);
     Q_EMIT tokenSecretChanged();
 }
 
-QString O0BaseAuth::token() {
-    QString key = QString(O2_KEY_TOKEN).arg(clientId_);
-    return store_->value(key);
-}
-
-void O0BaseAuth::setToken(const QString &v) {
-    QString key = QString(O2_KEY_TOKEN).arg(clientId_);
-    store_->setValue(key, v);
-    Q_EMIT tokenChanged();
-}
 
 QString O0BaseAuth::clientId() {
     return clientId_;

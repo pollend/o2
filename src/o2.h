@@ -9,7 +9,7 @@
 #include "o0export.h"
 #include "o0baseauth.h"
 #include "o2reply.h"
-#include "o0abstractstore.h"
+
 
 class O2ReplyServer;
 
@@ -102,7 +102,7 @@ public:
 
 public Q_SLOTS:
     /// Authenticate.
-    Q_INVOKABLE virtual void link();
+    Q_INVOKABLE virtual void startOrRestart();
 
     /// De-authenticate.
     Q_INVOKABLE virtual void unlink();
@@ -124,6 +124,7 @@ Q_SIGNALS:
     void tokenUrlChanged();
 
 protected Q_SLOTS:
+
     /// Handle verification response.
     virtual void onVerificationReceived(QMap<QString, QString>);
 
@@ -164,7 +165,6 @@ protected:
     QString apiKey_;
     QNetworkAccessManager *manager_;
     O2ReplyServer *replyServer_;
-    O2ReplyList timedReplies_;
     GrantFlow grantFlow_;
 };
 

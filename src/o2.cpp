@@ -23,7 +23,6 @@
 #include "o2.h"
 #include "o2replyserver.h"
 #include "o0globals.h"
-#include "o0settingsstore.h"
 
 /// Parse JSON data into a QVariantMap
 static QVariantMap parseTokenResponse(const QByteArray &data) {
@@ -139,14 +138,8 @@ void O2::setRefreshTokenUrl(const QString &value) {
     Q_EMIT refreshTokenUrlChanged();
 }
 
-void O2::link() {
-    qDebug() << "O2::link";
-
-    if (linked()) {
-        qDebug() << "O2::link: Linked already";
-        Q_EMIT linkingSucceeded();
-        return;
-    }
+void O2::startOrRestart() {
+    qDebug() << "O2::Start";
 
     setLinked(false);
     setToken("");
